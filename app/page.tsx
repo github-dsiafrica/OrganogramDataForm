@@ -1,9 +1,14 @@
 "use client";
 
+import TableRow from "@/components/TableRow";
+import { Row } from "@/interfaces";
 import Papa from "papaparse";
-import { FormEventHandler } from "react";
+import { FormEventHandler, useState } from "react";
 
 export default function Home() {
+	const [rows, setRows] = useState<Row[]>();
+	const [fetching, setFetching] = useState<boolean>(true);
+
 	const handleFile: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
 		const formData = new FormData(e.target as HTMLFormElement);
@@ -12,6 +17,8 @@ export default function Home() {
 		Papa.parse(file, {
 			header: true,
 			complete: (result) => {
+				setRows(result.data as Row[]);
+				setFetching(false);
 				console.log(result);
 			},
 		});
@@ -23,6 +30,12 @@ export default function Home() {
 				<input type="file" name="csv" id="csv" />
 				<button type="submit">Submit</button>
 			</form>
+
+			{fetching ? (
+				<p>Fetching data...</p>
+			) : (
+				rows?.map((row) => <TableRow type={row.type} row={row} key={row.id} />)
+			)}
 		</main>
 	);
 }
