@@ -6,7 +6,7 @@ const nextConfig = {
 				hostname: "dsi-africa.org",
 			},
 			{
-				hostname: "githubusercontent.com",
+				hostname: "raw.githubusercontent.com",
 			},
 		],
 	},
