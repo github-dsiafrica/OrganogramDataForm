@@ -9,8 +9,8 @@ type Group = {
 
 type Project = {
 	id: number;
-	title: string;
 	parentId: number;
+	title: string;
 	acronym?: string;
 	institution: string;
 	country: string;
