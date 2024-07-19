@@ -6,8 +6,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }): JSX.Element => {
 		case "group":
 			return (
 				<div className="bg-slate-200 grid grid-cols-12">
-					<p>{row.id}</p>
-					<p>{row.parentId}</p>
+					<p id={`id-${row.id}`}>{row.id}</p>
+					<a href={`#id-${row.parentId}`}>{row.parentId}</a>
 					<p>{row.title}</p>
 					<p>{row.acronym}</p>
 					<p></p>
@@ -23,8 +23,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }): JSX.Element => {
 		case "project":
 			return (
 				<div className="bg-red-200 grid grid-cols-12">
-					<p>{row.id}</p>
-					<p>{row.parentId}</p>
+					<p id={`id-${row.id}`}>{row.id}</p>
+					<a href={`#id-${row.parentId}`}>{row.parentId}</a>
 					<p>{row.title}</p>
 					<p>{row?.acronym}</p>
 					<p>{row.institution}</p>
@@ -46,8 +46,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }): JSX.Element => {
 		case "member":
 			return (
 				<div className="bg-green-200 grid grid-cols-12">
-					<p>{row.id}</p>
-					<p>{row.parentId}</p>
+					<p id={`id-${row.id}`}>{row.id}</p>
+					<a href={`#id-${row.parentId}`}>{row.parentId}</a>
 					<p>{row.title}</p>
 					<p></p>
 					<p></p>
@@ -69,8 +69,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }): JSX.Element => {
 		case "info":
 			return (
 				<div className="bg-blue-200 grid grid-cols-12">
-					<p>{row.id}</p>
-					<p>{row.parentId}</p>
+					<p id={`id-${row.id}`}>{row.id}</p>
+					<a href={`#id-${row.parentId}`}>{row.parentId}</a>
 					<p></p>
 					<p></p>
 					<p></p>
