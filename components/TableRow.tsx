@@ -1,4 +1,5 @@
 import { TableRowProps } from "@/interfaces";
+import Image from "next/image";
 
 const TableRow: React.FC<TableRowProps> = ({ type, row }): JSX.Element => {
 	switch (row.type) {
@@ -29,7 +30,11 @@ const TableRow: React.FC<TableRowProps> = ({ type, row }): JSX.Element => {
 					<p>{row.institution}</p>
 					<p>{row.country}</p>
 
-					<img src={row.picture} alt="picture" />
+					{row.picture ? (
+						<Image src={row?.picture} alt="picture" height={50} width={50} />
+					) : (
+						<p></p>
+					)}
 
 					<p>{row.pi}</p>
 					<a href={row.link}>{row.link}</a>
@@ -48,7 +53,11 @@ const TableRow: React.FC<TableRowProps> = ({ type, row }): JSX.Element => {
 					<p></p>
 					<p></p>
 
-					<img src={row?.picture} alt="picture" />
+					{row.picture ? (
+						<Image src={row?.picture} alt="picture" height={50} width={50} />
+					) : (
+						<p></p>
+					)}
 
 					<p></p>
 					<p></p>
