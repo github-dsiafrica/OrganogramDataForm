@@ -35,7 +35,7 @@ export default function Home() {
 				<p>Fetching data...</p>
 			) : (
 				<>
-					<div className="font-bold grid grid-cols-12">
+					<div className="font-bold grid grid-cols-12 sticky top-0 bg-white">
 						<p>id</p>
 						<p>parentId</p>
 						<p>title</p>
