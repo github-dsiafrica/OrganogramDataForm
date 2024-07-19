@@ -165,3 +165,9 @@
 body {
 	font-family: "Futura Std Book", sans-serif;
 }
+
+a,
+p {
+	word-wrap: break-word;
+	padding: 0.5rem;
+}
