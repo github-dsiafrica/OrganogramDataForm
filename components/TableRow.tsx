@@ -1,7 +1,7 @@
 import { TableRowProps } from "@/interfaces";
 import Image from "next/image";
 
-const TableRow: React.FC<TableRowProps> = ({ type, row }): JSX.Element => {
+const TableRow: React.FC<TableRowProps> = ({ row }): JSX.Element => {
 	switch (row.type) {
 		case "group":
 			return (

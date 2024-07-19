@@ -50,7 +50,7 @@ export default function Home() {
 						<p>role</p>
 					</div>
 					{rows?.map((row) => (
-						<TableRow type={row.type} row={row} key={row.id} />
+						<TableRow row={row} key={row.id} />
 					))}
 				</>
 			)}

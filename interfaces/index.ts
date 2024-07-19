@@ -86,5 +86,4 @@ export type Row = Group | Project | Member | Info;
 
 export interface TableRowProps {
 	row: Row;
-	type: "group" | "project" | "member" | "info";
 }
