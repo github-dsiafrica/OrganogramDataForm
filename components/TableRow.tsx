@@ -4,26 +4,74 @@ const TableRow: React.FC<TableRowProps> = ({ type, row }): JSX.Element => {
 	switch (row.type) {
 		case "group":
 			return (
-				<div className="">
-					{row.id} {row.type}
+				<div className="bg-slate-200 grid grid-cols-12">
+					<p>{row.id}</p>
+					<p>{row.parentId}</p>
+					<p>{row.title}</p>
+					<p>{row.acronym}</p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<a href={row.link}>{row.link}</a>
+					<p></p>
+					<p></p>
+					<p></p>
 				</div>
 			);
 		case "project":
 			return (
-				<div className="">
-					{row.id} {row.type}
+				<div className="bg-red-200 grid grid-cols-12">
+					<p>{row.id}</p>
+					<p>{row.parentId}</p>
+					<p>{row.title}</p>
+					<p>{row?.acronym}</p>
+					<p>{row.institution}</p>
+					<p>{row.country}</p>
+
+					<img src={row.picture} alt="picture" />
+
+					<p>{row.pi}</p>
+					<a href={row.link}>{row.link}</a>
+					<p></p>
+					<p></p>
+					<p></p>
 				</div>
 			);
 		case "member":
 			return (
-				<div className="">
-					{row.id} {row.type}
+				<div className="bg-green-200 grid grid-cols-12">
+					<p>{row.id}</p>
+					<p>{row.parentId}</p>
+					<p>{row.title}</p>
+					<p></p>
+					<p></p>
+					<p></p>
+
+					<img src={row?.picture} alt="picture" />
+
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p>{row.role}</p>
 				</div>
 			);
 		case "info":
 			return (
-				<div className="">
-					{row.id} {row.type}
+				<div className="bg-blue-200 grid grid-cols-12">
+					<p>{row.id}</p>
+					<p>{row.parentId}</p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<a href={row.link}>{row.link}</a>
+					<p>{row.bio}</p>
+					<p>{row.expertise}</p>
+					<p></p>
 				</div>
 			);
 	}

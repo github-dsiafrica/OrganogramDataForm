@@ -34,7 +34,25 @@ export default function Home() {
 			{fetching ? (
 				<p>Fetching data...</p>
 			) : (
-				rows?.map((row) => <TableRow type={row.type} row={row} key={row.id} />)
+				<>
+					<div className="font-bold grid grid-cols-12">
+						<p>id</p>
+						<p>parentId</p>
+						<p>title</p>
+						<p>acronym</p>
+						<p>institution</p>
+						<p>country</p>
+						<p>picture</p>
+						<p>pi</p>
+						<p>link</p>
+						<p>bio</p>
+						<p>expertise</p>
+						<p>role</p>
+					</div>
+					{rows?.map((row) => (
+						<TableRow type={row.type} row={row} key={row.id} />
+					))}
+				</>
 			)}
 		</main>
 	);
