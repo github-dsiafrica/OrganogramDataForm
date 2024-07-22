@@ -1,5 +1,6 @@
 "use client";
 
+import AddRowForm from "@/components/AddRowForm";
 import TableRow from "@/components/TableRow";
 import { Row } from "@/interfaces";
 import Papa from "papaparse";
@@ -30,6 +31,8 @@ export default function Home() {
 				<input type="file" name="csv" id="csv" />
 				<button type="submit">Submit</button>
 			</form>
+
+			<AddRowForm />
 
 			{fetching ? (
 				<p>Fetching data...</p>

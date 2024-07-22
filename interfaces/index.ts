@@ -84,6 +84,13 @@ type Info = {
 
 export type Row = Group | Project | Member | Info;
 
+export enum Type {
+	Group = "group",
+	Project = "project",
+	Member = "member",
+	Info = "info",
+}
+
 export interface TableRowProps {
 	row: Row;
 }
