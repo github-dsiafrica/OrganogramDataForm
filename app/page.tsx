@@ -56,7 +56,7 @@ export default function Home() {
 				<p className="py-4">Fetching data...</p>
 			) : (
 				<>
-					<div className="font-bold grid grid-cols-12 sticky top-0 bg-white">
+					<div className="font-bold grid grid-cols-12 sticky top-0 bg-white pt-4">
 						<p>id</p>
 						<p>parentId</p>
 						<p>title</p>
