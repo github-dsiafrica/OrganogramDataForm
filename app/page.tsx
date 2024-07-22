@@ -37,7 +37,7 @@ export default function Home() {
 		<main>
 			<form className="py-4" onSubmit={handleFile}>
 				<input type="file" name="csv" id="csv" />
-				<button type="submit">Submit</button>
+				<Button type="submit">Submit</Button>
 			</form>
 
 			<Dialog>
