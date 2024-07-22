@@ -45,37 +45,46 @@ const AddRowForm: React.FC = (): JSX.Element => {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Type</FormLabel>
-								<FormControl>
-									<Select {...field}>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+								>
+									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder="Type" />
 										</SelectTrigger>
-										<SelectContent>
-											{Object.values(Type).map((type) => (
-												<SelectItem key={type} value={type}>
-													{type}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-								</FormControl>
+									</FormControl>
+									<SelectContent>
+										{Object.values(Type).map((type) => (
+											<SelectItem key={type} value={type}>
+												{type}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-					<FormField
-						control={form.control}
-						name="title"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Title</FormLabel>
-								<FormControl>
-									<Input placeholder="Title" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+					{/* Render different fields based on type */}
+					{form.watch("type") === Type.Member && (
+						<>
+							<FormField
+								control={form.control}
+								name="title"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Title</FormLabel>
+										<FormControl>
+											<Input placeholder="Title" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</>
+					)}
+
 					<Button type="submit">Submit</Button>
 				</form>
 			</Form>
