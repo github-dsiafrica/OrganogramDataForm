@@ -5,6 +5,14 @@ import TableRow from "@/components/TableRow";
 import { Row } from "@/interfaces";
 import Papa from "papaparse";
 import { FormEventHandler, useState } from "react";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
 	const [rows, setRows] = useState<Row[]>();
@@ -27,15 +35,25 @@ export default function Home() {
 
 	return (
 		<main>
-			<form onSubmit={handleFile}>
+			<form className="py-4" onSubmit={handleFile}>
 				<input type="file" name="csv" id="csv" />
 				<button type="submit">Submit</button>
 			</form>
 
-			<AddRowForm />
+			<Dialog>
+				<DialogTrigger asChild>
+					<Button variant="outline">Add row</Button>
+				</DialogTrigger>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Add a new row</DialogTitle>
+						<AddRowForm />
+					</DialogHeader>
+				</DialogContent>
+			</Dialog>
 
 			{fetching ? (
-				<p>Fetching data...</p>
+				<p className="py-4">Fetching data...</p>
 			) : (
 				<>
 					<div className="font-bold grid grid-cols-12 sticky top-0 bg-white">
