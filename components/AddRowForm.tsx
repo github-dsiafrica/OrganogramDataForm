@@ -15,6 +15,13 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const AddRowForm: React.FC = (): JSX.Element => {
 	// Create zod form schema inferring the fields from the Row type
@@ -34,14 +41,37 @@ const AddRowForm: React.FC = (): JSX.Element => {
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<FormField
 						control={form.control}
+						name="type"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Type</FormLabel>
+								<FormControl>
+									<Select {...field}>
+										<SelectTrigger>
+											<SelectValue placeholder="Type" />
+										</SelectTrigger>
+										<SelectContent>
+											{Object.values(Type).map((type) => (
+												<SelectItem key={type} value={type}>
+													{type}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
 						name="title"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Title</FormLabel>
 								<FormControl>
-									<Input placeholder="shadcn" {...field} />
+									<Input placeholder="Title" {...field} />
 								</FormControl>
-								<FormDescription>Title</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
