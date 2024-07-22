@@ -15,8 +15,8 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className="container mx-auto">
-				<nav className="flex py-4 gap-8 justify-between items-center">
+			<body>
+				<nav className="flex py-4 gap-8 justify-between items-center container mx-auto">
 					<Image
 						src="https://dsi-africa.org/sites/default/files/Logo%20-%20primary%20on%20white-%20transparent.png"
 						width={300}

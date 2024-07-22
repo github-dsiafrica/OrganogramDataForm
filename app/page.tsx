@@ -34,7 +34,7 @@ export default function Home() {
 	};
 
 	return (
-		<main>
+		<main className="container mx-auto">
 			<form className="py-4" onSubmit={handleFile}>
 				<input type="file" name="csv" id="csv" />
 				<Button type="submit">Submit</Button>
