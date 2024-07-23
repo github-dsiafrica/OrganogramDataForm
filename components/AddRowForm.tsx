@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Type, Row } from "@/interfaces";
+import { Type, Row, AddRowFormProps } from "@/interfaces";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -23,7 +23,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const AddRowForm: React.FC = (): JSX.Element => {
+const AddRowForm: React.FC<AddRowFormProps> = ({ lastId }): JSX.Element => {
 	// Create zod form schema inferring the fields from the Row type
 	const schema = z.custom<Row>();
 
@@ -69,6 +69,24 @@ const AddRowForm: React.FC = (): JSX.Element => {
 					{/* Render different fields based on type */}
 					{form.watch("type") === Type.Group && (
 						<>
+							<FormField
+								control={form.control}
+								name="id"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>ID</FormLabel>
+										<FormControl>
+											<Input
+												defaultValue={lastId}
+												readOnly
+												placeholder="ID"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 							<FormField
 								control={form.control}
 								name="title"

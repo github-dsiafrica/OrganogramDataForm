@@ -1,15 +1,15 @@
 type Group = {
-	id: number;
+	id: string;
 	title: string;
-	parentId?: number;
+	parentId?: string;
 	acronym: string;
 	type: "group";
 	link: string;
 };
 
 type Project = {
-	id: number;
-	parentId: number;
+	id: string;
+	parentId: string;
 	title: string;
 	acronym?: string;
 	institution: string;
@@ -21,8 +21,8 @@ type Project = {
 };
 
 type Member = {
-	id: number;
-	parentId: number;
+	id: string;
+	parentId: string;
 	title: string;
 	picture?: string;
 	type: "member";
@@ -74,8 +74,8 @@ type Member = {
 };
 
 type Info = {
-	id: number;
-	parentId: number;
+	id: string;
+	parentId: string;
 	type: "info";
 	link: string;
 	bio: string;
