@@ -42,12 +42,14 @@ export default function Home() {
 
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant="outline">Add row</Button>
+					<Button disabled={fetching} variant="outline">
+						Add row
+					</Button>
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Add a new row</DialogTitle>
-						<AddRowForm />
+						{rows?.length && <AddRowForm lastId={rows.length} />}
 					</DialogHeader>
 				</DialogContent>
 			</Dialog>

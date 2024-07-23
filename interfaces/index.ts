@@ -94,3 +94,7 @@ export enum Type {
 export interface TableRowProps {
 	row: Row;
 }
+
+export interface AddRowFormProps {
+	lastId: number;
+}
