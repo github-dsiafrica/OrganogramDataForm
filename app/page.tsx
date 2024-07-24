@@ -29,7 +29,7 @@ export default function Home() {
 			complete: (result) => {
 				setRows(result.data as Row[]);
 				setFetching(false);
-				console.log(result);
+				console.log(result.data);
 			},
 		});
 	};
@@ -54,6 +54,7 @@ export default function Home() {
 							<AddRowForm
 								lastId={parseInt(rows[rows.length - 1].id) + 1}
 								parentIds={rows.map((row) => row.id)}
+								setRows={setRows}
 							/>
 						)}
 					</DialogHeader>

@@ -100,4 +100,5 @@ export interface TableRowProps {
 export interface AddRowFormProps {
 	lastId: number;
 	parentIds: string[];
+	setRows: React.Dispatch<React.SetStateAction<Row[] | undefined>>;
 }

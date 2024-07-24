@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -27,6 +26,7 @@ import {
 const AddRowForm: React.FC<AddRowFormProps> = ({
 	lastId,
 	parentIds,
+	setRows,
 }): JSX.Element => {
 	// Create zod form schema inferring the fields from the Row type
 	const schema = z.custom<Row>();
@@ -40,6 +40,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 
 	const onSubmit = (values: Row) => {
 		console.log(values);
+		setRows((prev) => [...(prev ?? []), values]);
 	};
 
 	return (
