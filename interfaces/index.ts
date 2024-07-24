@@ -17,7 +17,7 @@ type Project = {
 	picture: string;
 	pi: string;
 	type: "project";
-	link: string;
+	link?: string;
 };
 
 type Member = {
@@ -81,7 +81,7 @@ type Info = {
 	type: "info";
 	link: string;
 	bio: string;
-	expertise: string;
+	expertise?: string;
 };
 
 export type Row = Group | Project | Member | Info;

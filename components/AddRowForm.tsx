@@ -52,6 +52,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 								<Select
 									onValueChange={field.onChange}
 									defaultValue={field.value}
+									required
 								>
 									<FormControl>
 										<SelectTrigger>
@@ -83,6 +84,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 											<Input
 												defaultValue={lastId}
 												readOnly
+												required
 												placeholder="ID"
 												{...field}
 											/>
@@ -127,7 +129,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Title</FormLabel>
 										<FormControl>
-											<Input placeholder="Title" {...field} />
+											<Input required placeholder="Title" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -141,7 +143,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Acronym</FormLabel>
 										<FormControl>
-											<Input placeholder="Acronym" {...field} />
+											<Input required placeholder="Acronym" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -155,7 +157,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Link</FormLabel>
 										<FormControl>
-											<Input placeholder="Link" {...field} />
+											<Input required placeholder="Link" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -176,6 +178,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 											<Input
 												defaultValue={lastId}
 												readOnly
+												required
 												placeholder="ID"
 												{...field}
 											/>
@@ -194,6 +197,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
+											required
 										>
 											<FormControl>
 												<SelectTrigger>
@@ -220,7 +224,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Title</FormLabel>
 										<FormControl>
-											<Input placeholder="Title" {...field} />
+											<Input required placeholder="Title" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -248,7 +252,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Institution</FormLabel>
 										<FormControl>
-											<Input placeholder="Institution" {...field} />
+											<Input required placeholder="Institution" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -262,7 +266,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Country</FormLabel>
 										<FormControl>
-											<Input placeholder="Country" {...field} />
+											<Input required placeholder="Country" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -276,7 +280,12 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Picture</FormLabel>
 										<FormControl>
-											<Input type="file" placeholder="Picture" {...field} />
+											<Input
+												required
+												type="file"
+												placeholder="Picture"
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -290,7 +299,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>PI</FormLabel>
 										<FormControl>
-											<Input placeholder="PI" {...field} />
+											<Input required placeholder="PI" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -325,6 +334,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 											<Input
 												defaultValue={lastId}
 												readOnly
+												required
 												placeholder="ID"
 												{...field}
 											/>
@@ -343,6 +353,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
+											required
 										>
 											<FormControl>
 												<SelectTrigger>
@@ -369,7 +380,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Title</FormLabel>
 										<FormControl>
-											<Input placeholder="Title" {...field} />
+											<Input required placeholder="Title" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -399,6 +410,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
+											required
 										>
 											<FormControl>
 												<SelectTrigger>
@@ -432,6 +444,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 											<Input
 												defaultValue={lastId}
 												readOnly
+												required
 												placeholder="ID"
 												{...field}
 											/>
@@ -450,6 +463,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
+											required
 										>
 											<FormControl>
 												<SelectTrigger>
@@ -476,7 +490,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Link</FormLabel>
 										<FormControl>
-											<Input placeholder="Link" {...field} />
+											<Input required placeholder="Link" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -490,7 +504,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Bio</FormLabel>
 										<FormControl>
-											<Textarea placeholder="Bio" {...field} />
+											<Textarea required placeholder="Bio" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
