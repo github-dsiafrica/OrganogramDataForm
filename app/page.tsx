@@ -4,6 +4,7 @@ import AddRowForm from "@/components/AddRowForm";
 import TableRow from "@/components/TableRow";
 import { Row } from "@/interfaces";
 import Papa from "papaparse";
+import { useTheme } from "next-themes";
 import { FormEventHandler, useState } from "react";
 import {
 	Dialog,
@@ -17,6 +18,8 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
 	const [rows, setRows] = useState<Row[]>();
 	const [fetching, setFetching] = useState<boolean>(true);
+	const { setTheme } = useTheme();
+	setTheme("dark");
 
 	const handleFile: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
