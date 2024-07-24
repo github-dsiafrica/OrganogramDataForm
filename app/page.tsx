@@ -14,6 +14,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function Home() {
 	const [rows, setRows] = useState<Row[]>();
@@ -38,8 +39,8 @@ export default function Home() {
 
 	return (
 		<main className="container mx-auto">
-			<form className="py-4" onSubmit={handleFile}>
-				<input type="file" name="csv" id="csv" />
+			<form className="py-4 w-fit space-y-4" onSubmit={handleFile}>
+				<Input required type="file" name="csv" id="csv" />
 				<Button type="submit">Submit</Button>
 			</form>
 
