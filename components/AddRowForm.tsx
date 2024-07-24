@@ -132,6 +132,34 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									</FormItem>
 								)}
 							/>
+
+							<FormField
+								control={form.control}
+								name="acronym"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Acronym</FormLabel>
+										<FormControl>
+											<Input placeholder="Acronym" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="link"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Link</FormLabel>
+										<FormControl>
+											<Input placeholder="Link" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 						</>
 					)}
 
