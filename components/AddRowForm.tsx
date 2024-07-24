@@ -164,7 +164,54 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 					)}
 
 					{form.watch("type") === Type.Project && (
-						<>
+						<div className="grid grid-cols-2 gap-8">
+							<FormField
+								control={form.control}
+								name="id"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>ID</FormLabel>
+										<FormControl>
+											<Input
+												defaultValue={lastId}
+												readOnly
+												placeholder="ID"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="parentId"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Parent ID</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Parent ID" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{parentIds.map((type) => (
+													<SelectItem key={type} value={type}>
+														{type}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
 							<FormField
 								control={form.control}
 								name="title"
@@ -178,7 +225,91 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									</FormItem>
 								)}
 							/>
-						</>
+
+							<FormField
+								control={form.control}
+								name="acronym"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Acronym</FormLabel>
+										<FormControl>
+											<Input placeholder="Acronym" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="institution"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Institution</FormLabel>
+										<FormControl>
+											<Input placeholder="Institution" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="country"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Country</FormLabel>
+										<FormControl>
+											<Input placeholder="Country" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="picture"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Picture</FormLabel>
+										<FormControl>
+											<Input type="file" placeholder="Picture" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="pi"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>PI</FormLabel>
+										<FormControl>
+											<Input placeholder="PI" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="link"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Link</FormLabel>
+										<FormControl>
+											<Input placeholder="Link" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
 					)}
 
 					{form.watch("type") === Type.Member && (
