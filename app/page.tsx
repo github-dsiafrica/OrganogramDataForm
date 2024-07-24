@@ -50,7 +50,10 @@ export default function Home() {
 					<DialogHeader>
 						<DialogTitle>Add a new row</DialogTitle>
 						{rows?.length && (
-							<AddRowForm lastId={parseInt(rows[rows.length - 1].id) + 1} />
+							<AddRowForm
+								lastId={parseInt(rows[rows.length - 1].id) + 1}
+								parentIds={rows.map((row) => row.id)}
+							/>
 						)}
 					</DialogHeader>
 				</DialogContent>

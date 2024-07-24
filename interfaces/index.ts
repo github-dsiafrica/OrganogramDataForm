@@ -97,4 +97,5 @@ export interface TableRowProps {
 
 export interface AddRowFormProps {
 	lastId: number;
+	parentIds: string[];
 }

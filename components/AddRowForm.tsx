@@ -23,7 +23,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const AddRowForm: React.FC<AddRowFormProps> = ({ lastId }): JSX.Element => {
+const AddRowForm: React.FC<AddRowFormProps> = ({
+	lastId,
+	parentIds,
+}): JSX.Element => {
 	// Create zod form schema inferring the fields from the Row type
 	const schema = z.custom<Row>();
 
@@ -87,6 +90,35 @@ const AddRowForm: React.FC<AddRowFormProps> = ({ lastId }): JSX.Element => {
 									</FormItem>
 								)}
 							/>
+
+							<FormField
+								control={form.control}
+								name="parentId"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Parent ID</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Parent ID" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{parentIds.map((type) => (
+													<SelectItem key={type} value={type}>
+														{type}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
 							<FormField
 								control={form.control}
 								name="title"
