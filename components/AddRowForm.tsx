@@ -33,6 +33,9 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 
 	const form = useForm<Row>({
 		resolver: zodResolver(schema),
+		defaultValues: {
+			id: lastId.toString(),
+		},
 	});
 
 	const onSubmit = (values: Row) => {
@@ -81,13 +84,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>ID</FormLabel>
 										<FormControl>
-											<Input
-												defaultValue={lastId}
-												readOnly
-												required
-												placeholder="ID"
-												{...field}
-											/>
+											<Input readOnly required placeholder="ID" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -175,13 +172,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>ID</FormLabel>
 										<FormControl>
-											<Input
-												defaultValue={lastId}
-												readOnly
-												required
-												placeholder="ID"
-												{...field}
-											/>
+											<Input readOnly required placeholder="ID" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -331,13 +322,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>ID</FormLabel>
 										<FormControl>
-											<Input
-												defaultValue={lastId}
-												readOnly
-												required
-												placeholder="ID"
-												{...field}
-											/>
+											<Input readOnly required placeholder="ID" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -441,13 +426,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>ID</FormLabel>
 										<FormControl>
-											<Input
-												defaultValue={lastId}
-												readOnly
-												required
-												placeholder="ID"
-												{...field}
-											/>
+											<Input readOnly required placeholder="ID" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -490,7 +469,12 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Link</FormLabel>
 										<FormControl>
-											<Input required placeholder="Link" {...field} />
+											<Input
+												type="url"
+												required
+												placeholder="Link"
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
