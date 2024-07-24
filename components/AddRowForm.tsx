@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Type, Row, AddRowFormProps } from "@/interfaces";
+import { Type, Row, AddRowFormProps, Role } from "@/interfaces";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -316,6 +316,53 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 						<>
 							<FormField
 								control={form.control}
+								name="id"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>ID</FormLabel>
+										<FormControl>
+											<Input
+												defaultValue={lastId}
+												readOnly
+												placeholder="ID"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="parentId"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Parent ID</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Parent ID" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{parentIds.map((type) => (
+													<SelectItem key={type} value={type}>
+														{type}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
 								name="title"
 								render={({ field }) => (
 									<FormItem>
@@ -323,6 +370,48 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 										<FormControl>
 											<Input placeholder="Title" {...field} />
 										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="picture"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Picture</FormLabel>
+										<FormControl>
+											<Input type="file" placeholder="Picture" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="role"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Role</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Role" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{Object.values(Role).map((role) => (
+													<SelectItem key={role} value={role}>
+														{role}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
 										<FormMessage />
 									</FormItem>
 								)}
