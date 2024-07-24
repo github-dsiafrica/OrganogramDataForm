@@ -15,6 +15,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
 	Select,
 	SelectContent,
@@ -423,12 +424,87 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 						<>
 							<FormField
 								control={form.control}
-								name="title"
+								name="id"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Title</FormLabel>
+										<FormLabel>ID</FormLabel>
 										<FormControl>
-											<Input placeholder="Title" {...field} />
+											<Input
+												defaultValue={lastId}
+												readOnly
+												placeholder="ID"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="parentId"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Parent ID</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Parent ID" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{parentIds.map((type) => (
+													<SelectItem key={type} value={type}>
+														{type}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="link"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Link</FormLabel>
+										<FormControl>
+											<Input placeholder="Link" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="bio"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Bio</FormLabel>
+										<FormControl>
+											<Textarea placeholder="Bio" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="expertise"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Expertise</FormLabel>
+										<FormControl>
+											<Textarea placeholder="Expertise" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
