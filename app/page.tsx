@@ -3,7 +3,7 @@
 import AddRowForm from "@/components/AddRowForm";
 import TableRow from "@/components/TableRow";
 import { Row } from "@/interfaces";
-import Papa from "papaparse";
+import Papa, { ParseMeta } from "papaparse";
 import { FormEventHandler, useState } from "react";
 import {
 	Dialog,
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 
 export default function Home() {
 	const [rows, setRows] = useState<Row[]>();
+	const [meta, setMeta] = useState<ParseMeta>();
 	const [fetching, setFetching] = useState<boolean>(true);
 
 	const handleFile: FormEventHandler<HTMLFormElement> = (e) => {
@@ -28,18 +29,41 @@ export default function Home() {
 			header: true,
 			complete: (result) => {
 				setRows(result.data as Row[]);
+				setMeta(result.meta);
 				setFetching(false);
 				console.log(result.data);
 			},
 		});
 	};
 
+	const unparse: FormEventHandler<HTMLFormElement> = (e) => {
+		e.preventDefault();
+		const csv = Papa.unparse(rows as Row[], {
+			header: true,
+			columns: meta?.fields,
+		});
+		console.log(csv);
+
+		const blob = new Blob([csv], { type: "text/csv" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "data.csv";
+		a.click();
+		URL.revokeObjectURL(url);
+	};
+
 	return (
 		<main className="container mx-auto">
-			<form className="py-4 w-fit space-y-4" onSubmit={handleFile}>
-				<Input required type="file" name="csv" id="csv" />
-				<Button type="submit">Submit</Button>
-			</form>
+			<div className="flex justify-between">
+				<form className="py-4 w-fit space-y-4" onSubmit={handleFile}>
+					<Input required type="file" name="csv" id="csv" />
+					<Button type="submit">Submit</Button>
+				</form>
+				<form className="py-4 w-fit space-y-4" onSubmit={unparse}>
+					<Button type="submit">Unparse</Button>
+				</form>
+			</div>
 
 			<Dialog>
 				<DialogTrigger asChild>
