@@ -28,7 +28,9 @@ export default function Home() {
 		Papa.parse(file, {
 			header: true,
 			complete: (result) => {
-				setRows(result.data as Row[]);
+				// Set rows with result.data reversed
+				setRows([...result.data].reverse() as Row[]);
+				// Set meta with result
 				setMeta(result.meta);
 				setFetching(false);
 				console.log(result.data);

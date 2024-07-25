@@ -39,8 +39,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 	});
 
 	const onSubmit = (values: Row) => {
-		console.log(values);
-		setRows((prev) => [...(prev ?? []), values]);
+		setRows((prev) => [values, ...(prev ?? [])]);
 	};
 
 	return (
