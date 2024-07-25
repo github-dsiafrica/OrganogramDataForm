@@ -79,7 +79,7 @@ export default function Home() {
 						{rows?.length && (
 							<AddRowForm
 								lastId={parseInt(rows[0].id) + 1}
-								parentIds={rows.map((row) => row.id)}
+								parentIds={[...rows].reverse().map((row) => row.id)}
 								setRows={setRows}
 								setOpen={setOpen}
 							/>
