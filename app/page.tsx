@@ -40,7 +40,7 @@ export default function Home() {
 
 	const unparse: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
-		const csv = Papa.unparse(rows as Row[], {
+		const csv = Papa.unparse([...(rows as Row[])].reverse(), {
 			header: true,
 			columns: meta?.fields,
 		});
