@@ -275,7 +275,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 										<FormControl>
 											<Input
 												required
-												type="file"
+												type="url"
 												placeholder="Picture"
 												{...field}
 											/>
@@ -381,7 +381,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 									<FormItem>
 										<FormLabel>Picture</FormLabel>
 										<FormControl>
-											<Input type="file" placeholder="Picture" {...field} />
+											<Input type="url" placeholder="Picture" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
