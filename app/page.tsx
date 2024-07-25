@@ -44,7 +44,6 @@ export default function Home() {
 			header: true,
 			columns: meta?.fields,
 		});
-		console.log(csv);
 
 		const blob = new Blob([csv], { type: "text/csv" });
 		const url = URL.createObjectURL(blob);
@@ -78,7 +77,7 @@ export default function Home() {
 						<DialogTitle>Add a new row</DialogTitle>
 						{rows?.length && (
 							<AddRowForm
-								lastId={parseInt(rows[rows.length - 1].id) + 1}
+								lastId={parseInt(rows[0].id) + 1}
 								parentIds={rows.map((row) => row.id)}
 								setRows={setRows}
 							/>
