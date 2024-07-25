@@ -19,6 +19,7 @@ export default function Home() {
 	const [rows, setRows] = useState<Row[]>();
 	const [meta, setMeta] = useState<ParseMeta>();
 	const [fetching, setFetching] = useState<boolean>(true);
+	const [open, setOpen] = useState<boolean>(false);
 
 	const handleFile: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
@@ -66,7 +67,7 @@ export default function Home() {
 				</form>
 			</div>
 
-			<Dialog>
+			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button disabled={fetching} variant="outline">
 						Add row
@@ -80,6 +81,7 @@ export default function Home() {
 								lastId={parseInt(rows[0].id) + 1}
 								parentIds={rows.map((row) => row.id)}
 								setRows={setRows}
+								setOpen={setOpen}
 							/>
 						)}
 					</DialogHeader>

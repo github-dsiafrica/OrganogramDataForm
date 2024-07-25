@@ -27,6 +27,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 	lastId,
 	parentIds,
 	setRows,
+	setOpen,
 }): JSX.Element => {
 	// Create zod form schema inferring the fields from the Row type
 	const schema = z.custom<Row>();
@@ -40,6 +41,7 @@ const AddRowForm: React.FC<AddRowFormProps> = ({
 
 	const onSubmit = (values: Row) => {
 		setRows((prev) => [values, ...(prev ?? [])]);
+		setOpen(false);
 	};
 
 	return (

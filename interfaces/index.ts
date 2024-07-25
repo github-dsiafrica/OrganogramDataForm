@@ -101,4 +101,5 @@ export interface AddRowFormProps {
 	lastId: number;
 	parentIds: string[];
 	setRows: React.Dispatch<React.SetStateAction<Row[] | undefined>>;
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
