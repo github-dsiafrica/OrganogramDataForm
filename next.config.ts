@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+	images: {
+		remotePatterns: [
+			{
+				hostname: "dsi-africa.org",
+			},
+			{
+				hostname: "raw.githubusercontent.com",
+			},
+		],
+	},
 };
 
 export default nextConfig;
