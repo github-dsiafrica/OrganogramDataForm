@@ -32,7 +32,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AddRowForm } from "./components/AddRowForm";
 import { EditRowForm } from "./components/EditRowForm";
 import { Group, Info, Member, Project, Row } from "./interfaces";
-import Image from "next/image";
 
 // CSV Parser
 const parseCSV = (csvText: string): Row[] => {
@@ -171,9 +170,9 @@ export default function OrganogramForm() {
 		return Math.max(...ids);
 	};
 
-	const getParentIds = (): string[] => {
+	const getParentIds = (): { id: string; title: string }[] => {
 		if (!rows) return [];
-		return rows.map((row) => row.id);
+		return rows.map((row) => ({ id: row.id, title: row.title || "" }));
 	};
 
 	const handleRowClick = (row: Row) => {
@@ -340,19 +339,10 @@ export default function OrganogramForm() {
 											<TableCell>
 												{getFieldValue(row, "picture") ? (
 													<div className="relative h-8 w-8 overflow-hidden rounded-full">
-														<Image
-															src={
-																getFieldValue(row, "picture") ||
-																"/placeholder.svg"
-															}
+														<img
+															src={getFieldValue(row, "picture")}
 															alt={`${row.title} picture`}
 															className="object-cover"
-															onError={(e) => {
-																(e.target as HTMLImageElement).src =
-																	"/placeholder.svg?height=32&width=32";
-															}}
-															width={32}
-															height={32}
 														/>
 													</div>
 												) : (
@@ -432,7 +422,9 @@ export default function OrganogramForm() {
 					{editingRow && rows && (
 						<EditRowForm
 							row={editingRow}
-							parentIds={getParentIds().filter((id) => id !== editingRow.id)}
+							parentIds={getParentIds().filter(
+								(parent) => parent.id !== editingRow.id
+							)}
 							setRows={setRows}
 							setOpen={setIsEditDialogOpen}
 						/>

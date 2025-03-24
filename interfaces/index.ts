@@ -1,6 +1,6 @@
 export interface AddRowFormProps {
 	lastId: number;
-	parentIds: string[];
+	parentIds: { id: string; title: string }[];
 	setRows: React.Dispatch<React.SetStateAction<Row[] | undefined>>;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -127,7 +127,7 @@ export type Row = Group | Project | Member | Info;
 
 export interface EditRowFormProps {
 	row: Row;
-	parentIds: string[];
+	parentIds: { id: string; title: string }[];
 	setRows: React.Dispatch<React.SetStateAction<Row[] | undefined>>;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

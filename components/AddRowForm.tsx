@@ -69,9 +69,9 @@ export function AddRowForm({
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="no-parent">No Parent</SelectItem>
-									{parentIds.map((id) => (
-										<SelectItem key={id} value={id}>
-											{id}
+									{parentIds.map((parent) => (
+										<SelectItem key={parent.id} value={parent.id}>
+											{parent.title} (ID: {parent.id})
 										</SelectItem>
 									))}
 								</SelectContent>
