@@ -819,12 +819,7 @@ function EditRowForm({ row, parentIds, setRows, setOpen }: EditRowFormProps) {
 				<div className="grid grid-cols-2 gap-4">
 					<div className="space-y-2">
 						<Label htmlFor="title">Title</Label>
-						<Input
-							id="title"
-							name="title"
-							defaultValue={row.title || ""}
-							required
-						/>
+						<Input id="title" name="title" defaultValue={row.title || ""} />
 					</div>
 
 					<div className="space-y-2">
