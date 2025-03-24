@@ -71,7 +71,7 @@ export enum Role {
   SoftwareEngineer = "Software Engineer",
   SystemAdminDataScientist = "System Admin | Data Scientist",
   SystemsAdministrator = "Systems Administrator",
-  TrainingAndOutreachCoordinator = "Training and Outreach Coordinator",
+  TrainingAndOutreachCoordinator = "Training And Outreach Coordinator",
   TrainingCoordinator = "Training Coordinator",
   WebDeveloper = "Web Developer",
 }
@@ -151,11 +151,39 @@ const parseCSV = (csvText: string): Row[] => {
     .slice(1)
     .filter((line) => line.trim())
     .map((line) => {
-      const values = line.split(",")
+      // Handle quoted values with commas inside
+      const values: string[] = []
+      let currentValue = ""
+      let insideQuotes = false
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i]
+
+        if (char === '"' && (i === 0 || line[i - 1] !== "\\")) {
+          insideQuotes = !insideQuotes
+        } else if (char === "," && !insideQuotes) {
+          values.push(currentValue.trim())
+          currentValue = ""
+        } else {
+          currentValue += char
+        }
+      }
+
+      // Add the last value
+      values.push(currentValue.trim())
+
+      // Remove quotes from values
+      const cleanValues = values.map((val) => {
+        if (val.startsWith('"') && val.endsWith('"')) {
+          return val.substring(1, val.length - 1)
+        }
+        return val
+      })
+
       const row: any = {}
 
       headers.forEach((header, index) => {
-        row[header] = values[index] ? values[index].trim() : ""
+        row[header] = index < cleanValues.length ? cleanValues[index] : ""
       })
 
       return row as Row
@@ -197,8 +225,10 @@ const generateCSV = (rows: Row[]): string => {
 export default function OrganogramForm() {
   const [rows, setRows] = useState<Row[] | undefined>()
   const [editingRow, setEditingRow] = useState<Row | null>(null)
+  const [deletingRowId, setDeletingRowId] = useState<string | null>(null)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -250,14 +280,76 @@ export default function OrganogramForm() {
     setIsEditDialogOpen(true)
   }
 
-  const handleDeleteRow = (id: string) => {
-    if (!rows) return
-    setRows(rows.filter((row) => row.id !== id))
+  const confirmDelete = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setDeletingRowId(id)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleDeleteRow = () => {
+    if (!rows || !deletingRowId) return
+    setRows(rows.filter((row) => row.id !== deletingRowId))
+    setIsDeleteDialogOpen(false)
+    setDeletingRowId(null)
+  }
+
+  // Helper function to safely get field values
+  const getFieldValue = (row: Row, field: string): string => {
+    if (field === "acronym") {
+      if (row.type === "group") return (row as Group).acronym || "-"
+      if (row.type === "project") return (row as Project).acronym || "-"
+      if (row.type === "member") return (row as Member).acronym || "-"
+      if (row.type === "info") return (row as Info).acronym || "-"
+    }
+
+    if (field === "institution") {
+      if (row.type === "group") return (row as Group).institution || "-"
+      if (row.type === "project") return (row as Project).institution || "-"
+      if (row.type === "member") return (row as Member).institution || "-"
+      if (row.type === "info") return (row as Info).institution || "-"
+    }
+
+    if (field === "country") {
+      if (row.type === "group") return (row as Group).country || "-"
+      if (row.type === "project") return (row as Project).country || "-"
+      if (row.type === "member") return (row as Member).country || "-"
+      if (row.type === "info") return (row as Info).country || "-"
+    }
+
+    if (field === "pi") {
+      if (row.type === "group") return (row as Group).pi || "-"
+      if (row.type === "project") return (row as Project).pi || "-"
+      if (row.type === "member") return (row as Member).pi || "-"
+      if (row.type === "info") return (row as Info).pi || "-"
+    }
+
+    if (field === "role") {
+      if (row.type === "member") return (row as Member).role || "-"
+      if (row.type === "group") return (row as Group).role || "-"
+      if (row.type === "project") return (row as Project).role || "-"
+      if (row.type === "info") return (row as Info).role || "-"
+    }
+
+    if (field === "picture") {
+      if (row.type === "group") return (row as Group).picture || ""
+      if (row.type === "project") return (row as Project).picture || ""
+      if (row.type === "member") return (row as Member).picture || ""
+      if (row.type === "info") return (row as Info).picture || ""
+    }
+
+    if (field === "link") {
+      if (row.type === "group") return (row as Group).link || ""
+      if (row.type === "project") return (row as Project).link || ""
+      if (row.type === "member") return (row as Member).link || ""
+      if (row.type === "info") return (row as Info).link || ""
+    }
+
+    return "-"
   }
 
   return (
     <div className="container mx-auto py-8">
-      <Card className="mb-8">
+      <Card className="mb-8 w-full">
         <CardHeader>
           <CardTitle>DS-I Africa Organogram Data Manager</CardTitle>
           <CardDescription>Upload, edit, and manage the data for the DS-I Africa organogram</CardDescription>
@@ -295,15 +387,22 @@ export default function OrganogramForm() {
           )}
 
           {rows ? (
-            <div className="border rounded-md">
+            <div className="border rounded-md overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Parent ID</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="w-[80px]">ID</TableHead>
+                    <TableHead className="w-[80px]">Parent ID</TableHead>
+                    <TableHead className="min-w-[200px]">Title</TableHead>
+                    <TableHead className="w-[100px]">Type</TableHead>
+                    <TableHead className="w-[100px]">Acronym</TableHead>
+                    <TableHead className="min-w-[150px]">Institution</TableHead>
+                    <TableHead className="w-[120px]">Country</TableHead>
+                    <TableHead className="w-[100px]">PI</TableHead>
+                    <TableHead className="w-[100px]">Role</TableHead>
+                    <TableHead className="w-[120px]">Picture</TableHead>
+                    <TableHead className="min-w-[150px]">Link</TableHead>
+                    <TableHead className="w-[80px]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -315,17 +414,46 @@ export default function OrganogramForm() {
                     >
                       <TableCell>{row.id}</TableCell>
                       <TableCell>{row.parentId || "-"}</TableCell>
-                      <TableCell>{row.title}</TableCell>
+                      <TableCell className="font-medium">{row.title}</TableCell>
                       <TableCell>{row.type}</TableCell>
+                      <TableCell>{getFieldValue(row, "acronym")}</TableCell>
+                      <TableCell>{getFieldValue(row, "institution")}</TableCell>
+                      <TableCell>{getFieldValue(row, "country")}</TableCell>
+                      <TableCell>{getFieldValue(row, "pi")}</TableCell>
+                      <TableCell>{getFieldValue(row, "role")}</TableCell>
                       <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleDeleteRow(row.id)
-                          }}
-                        >
+                        {getFieldValue(row, "picture") ? (
+                          <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                            <img
+                              src={getFieldValue(row, "picture") || "/placeholder.svg"}
+                              alt={`${row.title} picture`}
+                              className="object-cover"
+                              onError={(e) => {
+                                ;(e.target as HTMLImageElement).src = "/placeholder.svg?height=32&width=32"
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {getFieldValue(row, "link") ? (
+                          <a
+                            href={getFieldValue(row, "link")}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-blue-500 hover:underline truncate block max-w-[150px]"
+                          >
+                            {getFieldValue(row, "link")}
+                          </a>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="icon" onClick={(e) => confirmDelete(row.id, e)}>
                           <Trash className="h-4 w-4" />
                         </Button>
                       </TableCell>
@@ -377,6 +505,26 @@ export default function OrganogramForm() {
               setOpen={setIsEditDialogOpen}
             />
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this row? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex space-x-2 pt-4">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteRow}>
+              Delete
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
