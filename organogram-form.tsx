@@ -284,9 +284,16 @@ export default function OrganogramForm() {
 		document.body.removeChild(link);
 	};
 
+	// Gets the highest ID from the rows array to ensure new IDs are unique.
 	const getLastId = (): number => {
 		if (!rows || rows.length === 0) return 0;
-		return Math.max(...rows.map((row) => Number.parseInt(row.id)));
+
+		// Parse IDs as numbers and find the maximum
+		const ids = rows.map((row) => {
+			const parsed = parseInt(row.id, 10);
+			return isNaN(parsed) ? 0 : parsed;
+		});
+		return Math.max(...ids);
 	};
 
 	const getParentIds = (): string[] => {
