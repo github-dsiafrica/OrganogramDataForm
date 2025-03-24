@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-
 import "./globals.css";
+import Image from "next/image";
 
 export const metadata: Metadata = {
 	title: "DS-I Africa Organogram Data Generator",
@@ -14,7 +13,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en">
 			<body>
 				<nav className="flex py-4 gap-8 justify-between items-center container mx-auto">
 					<Image
