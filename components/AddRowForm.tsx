@@ -123,7 +123,12 @@ export function AddRowForm({
 						<div className="grid grid-cols-2 gap-4">
 							<div className="space-y-2">
 								<Label htmlFor="picture">Picture URL</Label>
-								<Input id="picture" name="picture" required />
+								<Input
+									id="picture"
+									name="picture"
+									required
+									defaultValue="https://raw.githubusercontent.com/github-dsiafrica/DS-IOrganogram/main/public/photos/placeholder.jpg"
+								/>
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="link">Link</Label>
@@ -136,7 +141,11 @@ export function AddRowForm({
 						<div className="grid grid-cols-2 gap-4">
 							<div className="space-y-2">
 								<Label htmlFor="picture">Picture URL</Label>
-								<Input id="picture" name="picture" />
+								<Input
+									id="picture"
+									name="picture"
+									defaultValue="https://raw.githubusercontent.com/github-dsiafrica/DS-IOrganogram/main/public/photos/placeholder.jpg"
+								/>
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="role">Role</Label>
