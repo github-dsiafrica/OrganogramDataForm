@@ -49,7 +49,7 @@ export function AddRowForm({
 	return (
 		<form onSubmit={handleSubmit}>
 			<Tabs
-				defaultValue={Type.Group}
+				defaultValue={Type.Member}
 				onValueChange={(value) => setSelectedType(value as Type)}
 			>
 				<TabsList className="grid grid-cols-4 mb-4">
