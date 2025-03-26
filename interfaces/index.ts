@@ -131,3 +131,26 @@ export interface EditRowFormProps {
 	setRows: React.Dispatch<React.SetStateAction<Row[] | undefined>>;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export type ExternalCSVRow = {
+	full_name: string;
+	country_residence: string;
+	orcid: string;
+	email: string;
+	highest_qualification: string;
+	expertise: string;
+	institution: string;
+	project_role: string;
+	start_date: string;
+	initial_position: string;
+	current_position: string;
+	wgs: string;
+};
+
+export interface ImportCSVFormProps {
+	rows: Row[] | undefined;
+	setRows: React.Dispatch<React.SetStateAction<Row[] | undefined>>;
+	getLastId: () => number;
+	isImportDialogOpen: boolean;
+	setIsImportDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}

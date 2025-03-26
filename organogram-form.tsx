@@ -2,7 +2,14 @@
 
 import type React from "react";
 import { useState, useRef } from "react";
-import { AlertCircle, Download, FileUp, Plus, Trash } from "lucide-react";
+import {
+	AlertCircle,
+	Download,
+	FileUp,
+	Plus,
+	Trash,
+	Upload,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +39,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AddRowForm } from "./components/AddRowForm";
 import { EditRowForm } from "./components/EditRowForm";
 import { Group, Info, Member, Project, Row } from "./interfaces";
+import ImportCSVForm from "./components/ImportCSVForm";
 
 // CSV Parser
 const parseCSV = (csvText: string): Row[] => {
@@ -123,6 +131,7 @@ export default function OrganogramForm() {
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -233,14 +242,15 @@ export default function OrganogramForm() {
 		if (field === "picture") {
 			if (row.type === "group") return (row as Group).picture || "";
 			if (row.type === "project") return (row as Project).picture || "";
-			if (row.type === "member") return (row as Member).picture || "";
+			if (row.type === "member")
+				return (row as unknown as Project).picture || "";
 			if (row.type === "info") return (row as Info).picture || "";
 		}
 
 		if (field === "link") {
 			if (row.type === "group") return (row as Group).link || "";
 			if (row.type === "project") return (row as Project).link || "";
-			if (row.type === "member") return (row as Member).link || "";
+			if (row.type === "member") return (row as unknown as Project).link || "";
 			if (row.type === "info") return (row as Info).link || "";
 		}
 
@@ -273,24 +283,33 @@ export default function OrganogramForm() {
 							className="hidden"
 						/>
 						{rows && (
-							<Button
-								onClick={handleDownloadCSV}
-								variant="outline"
-								className="flex items-center gap-2"
-							>
-								<Download className="h-4 w-4" />
-								Download CSV
-							</Button>
-						)}
-						{rows && (
-							<Button
-								onClick={() => setIsAddDialogOpen(true)}
-								variant="default"
-								className="flex items-center gap-2 ml-auto"
-							>
-								<Plus className="h-4 w-4" />
-								Add Row
-							</Button>
+							<>
+								<Button
+									onClick={() => setIsImportDialogOpen(true)}
+									variant="outline"
+									className="flex items-center gap-2"
+								>
+									<Upload className="h-4 w-4" />
+									Import Additional Data
+								</Button>
+								<Button
+									onClick={handleDownloadCSV}
+									variant="outline"
+									className="flex items-center gap-2"
+								>
+									<Download className="h-4 w-4" />
+									Download CSV
+								</Button>
+
+								<Button
+									onClick={() => setIsAddDialogOpen(true)}
+									variant="default"
+									className="flex items-center gap-2 ml-auto"
+								>
+									<Plus className="h-4 w-4" />
+									Add Row
+								</Button>
+							</>
 						)}
 					</div>
 
@@ -455,6 +474,14 @@ export default function OrganogramForm() {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
+
+			<ImportCSVForm
+				setRows={setRows}
+				rows={rows}
+				getLastId={getLastId}
+				isImportDialogOpen={isImportDialogOpen}
+				setIsImportDialogOpen={setIsImportDialogOpen}
+			/>
 		</div>
 	);
 }
