@@ -169,7 +169,7 @@ export function AddRowForm({
 						<div className="grid grid-cols-2 gap-4">
 							<div className="space-y-2">
 								<Label htmlFor="link">Link</Label>
-								<Input id="link" name="link" required />
+								<Input id="link" name="link" />
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="expertise">Expertise</Label>
@@ -179,7 +179,7 @@ export function AddRowForm({
 
 						<div className="space-y-2">
 							<Label htmlFor="bio">Bio</Label>
-							<Textarea id="bio" name="bio" required />
+							<Textarea id="bio" name="bio" />
 						</div>
 					</TabsContent>
 				</div>
