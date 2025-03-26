@@ -200,6 +200,30 @@ export default function ImportCSVForm({
 							<TabsTrigger value="url">From URL</TabsTrigger>
 						</TabsList>
 
+						<div className="space-y-2">
+							<Label htmlFor="importParentId">
+								Assign Parent ID (Optional)
+							</Label>
+							<Select value={importParentId} onValueChange={setImportParentId}>
+								<SelectTrigger>
+									<SelectValue placeholder="Select a parent ID" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="no-parent">No Parent</SelectItem>
+									{rows &&
+										rows.map((row) => (
+											<SelectItem key={row.id} value={row.id}>
+												{row.id} - {row.title}
+											</SelectItem>
+										))}
+								</SelectContent>
+							</Select>
+							<p className="text-sm text-muted-foreground">
+								All imported rows will be assigned to this parent. Leave empty
+								to import without a parent.
+							</p>
+						</div>
+
 						<TabsContent value="file" className="space-y-4">
 							<div className="space-y-2">
 								<Label htmlFor="importFile">Upload External CSV File</Label>
@@ -266,28 +290,6 @@ export default function ImportCSVForm({
 							</div>
 						</TabsContent>
 					</Tabs>
-
-					<div className="space-y-2">
-						<Label htmlFor="importParentId">Assign Parent ID (Optional)</Label>
-						<Select value={importParentId} onValueChange={setImportParentId}>
-							<SelectTrigger>
-								<SelectValue placeholder="Select a parent ID" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="no-parent">No Parent</SelectItem>
-								{rows &&
-									rows.map((row) => (
-										<SelectItem key={row.id} value={row.id}>
-											{row.id} - {row.title}
-										</SelectItem>
-									))}
-							</SelectContent>
-						</Select>
-						<p className="text-sm text-muted-foreground">
-							All imported rows will be assigned to this parent. Leave empty to
-							import without a parent.
-						</p>
-					</div>
 
 					{importError && (
 						<Alert variant="destructive">
