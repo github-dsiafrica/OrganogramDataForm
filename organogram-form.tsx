@@ -242,14 +242,15 @@ export default function OrganogramForm() {
 		if (field === "picture") {
 			if (row.type === "group") return (row as Group).picture || "";
 			if (row.type === "project") return (row as Project).picture || "";
-			if (row.type === "member") return (row as Member).picture || "";
+			if (row.type === "member")
+				return (row as unknown as Project).picture || "";
 			if (row.type === "info") return (row as Info).picture || "";
 		}
 
 		if (field === "link") {
 			if (row.type === "group") return (row as Group).link || "";
 			if (row.type === "project") return (row as Project).link || "";
-			if (row.type === "member") return (row as Member).link || "";
+			if (row.type === "member") return (row as unknown as Project).link || "";
 			if (row.type === "info") return (row as Info).link || "";
 		}
 

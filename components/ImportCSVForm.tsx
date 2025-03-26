@@ -32,6 +32,7 @@ import {
 import { ExternalCSVRow, ImportCSVFormProps } from "@/interfaces";
 import {
 	fetchExternalCSV,
+	findMatchingMember,
 	mapExternalRowsToOrganogramRows,
 	parseExternalCSV,
 } from "@/lib/csv-importer";
@@ -48,6 +49,10 @@ export default function ImportCSVForm({
 	const [importPreview, setImportPreview] = useState<ExternalCSVRow[]>([]);
 	const [isImporting, setIsImporting] = useState(false);
 	const [importError, setImportError] = useState<string | null>(null);
+	const [importStats, setImportStats] = useState<{
+		newCount: number;
+		updateCount: number;
+	} | null>(null);
 
 	const importFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,8 +85,8 @@ export default function ImportCSVForm({
 	};
 
 	const fetchPreview = async () => {
-		if (!importUrl) {
-			setImportError("Please enter a URL");
+		if (!importUrl && !importFileInputRef.current?.files?.length) {
+			setImportError("Please enter a URL or select a file");
 			return;
 		}
 
@@ -89,8 +94,35 @@ export default function ImportCSVForm({
 		setImportError(null);
 
 		try {
-			const externalRows = await fetchExternalCSV(importUrl);
+			let externalRows: ExternalCSVRow[];
+
+			if (importUrl) {
+				externalRows = await fetchExternalCSV(importUrl);
+			} else if (importFileInputRef.current?.files?.length) {
+				const file = importFileInputRef.current.files[0];
+				const csvText = await file.text();
+				externalRows = parseExternalCSV(csvText);
+			} else {
+				throw new Error("No import source specified");
+			}
+
 			setImportPreview(externalRows.slice(0, 5)); // Show first 5 rows as preview
+
+			// Calculate import statistics if we have existing rows
+			if (rows) {
+				let updateCount = 0;
+				let newCount = 0;
+
+				externalRows.forEach((externalRow) => {
+					if (findMatchingMember(externalRow, rows)) {
+						updateCount++;
+					} else {
+						newCount++;
+					}
+				});
+
+				setImportStats({ newCount, updateCount });
+			}
 		} catch (error) {
 			setImportError(`Failed to fetch or parse the CSV: ${error}`);
 		} finally {
@@ -112,19 +144,29 @@ export default function ImportCSVForm({
 			} else if (importFileInputRef.current?.files?.length) {
 				const file = importFileInputRef.current.files[0];
 				const csvText = await file.text();
-				// Use the imported function directly
 				externalRows = parseExternalCSV(csvText);
 			} else {
 				throw new Error("No import source specified");
 			}
 
-			const mappedRows = mapExternalRowsToOrganogramRows(
+			// Map external rows to our format, checking for existing members
+			const { newRows, updatedRows } = mapExternalRowsToOrganogramRows(
 				externalRows,
+				rows,
 				getLastId(),
 				importParentId === "no-parent" ? undefined : importParentId
 			);
 
-			setRows([...rows, ...mappedRows]);
+			// Create a new array with updated rows
+			const updatedRowsMap = new Map(updatedRows.map((row) => [row.id, row]));
+
+			const updatedRowsArray = rows.map((row) =>
+				updatedRowsMap.has(row.id) ? updatedRowsMap.get(row.id)! : row
+			);
+
+			// Add new rows
+			setRows([...updatedRowsArray, ...newRows]);
+
 			setIsImportDialogOpen(false);
 			setImportUrl("");
 			setImportParentId("");
@@ -180,6 +222,23 @@ export default function ImportCSVForm({
 									/>
 								</div>
 							</div>
+							{importFileInputRef.current &&
+								importFileInputRef.current.files &&
+								importFileInputRef.current.files.length > 0 && (
+									<Button
+										onClick={fetchPreview}
+										disabled={isImporting}
+										variant="outline"
+										className="w-full mt-2"
+									>
+										<RefreshCw
+											className={`h-4 w-4 mr-2 ${
+												isImporting ? "animate-spin" : ""
+											}`}
+										/>
+										Generate Preview
+									</Button>
+								)}
 						</TabsContent>
 
 						<TabsContent value="url" className="space-y-4">
@@ -265,6 +324,16 @@ export default function ImportCSVForm({
 							<p className="text-sm text-muted-foreground">
 								These rows will be imported as Member type entries.
 							</p>
+
+							{importStats && (
+								<div className="flex items-center gap-2">
+									<RefreshCw className="h-4 w-4" />
+									<small>
+										Import will add {importStats.newCount} new members and
+										update {importStats.updateCount} existing members.
+									</small>
+								</div>
+							)}
 						</div>
 					)}
 				</div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type Row, Type, Role, ExternalCSVRow } from "../interfaces";
 
 export async function fetchExternalCSV(url: string): Promise<ExternalCSVRow[]> {
@@ -52,7 +53,6 @@ export function parseExternalCSV(csvText: string): ExternalCSVRow[] {
 				return val;
 			});
 
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const row: any = {};
 
 			headers.forEach((header, index) => {
@@ -66,12 +66,52 @@ export function parseExternalCSV(csvText: string): ExternalCSVRow[] {
 		});
 }
 
+// Function to find matching members in existing data
+export function findMatchingMember(
+	externalRow: ExternalCSVRow,
+	existingRows: Row[]
+): Row | undefined {
+	// Normalize strings for comparison
+	const normalizeString = (str: string) =>
+		str.toLowerCase().trim().replace(/\s+/g, " ");
+
+	const normalizedName = normalizeString(externalRow.full_name);
+
+	// First try to find an exact match by name and institution
+	const exactMatch = existingRows.find(
+		(row) =>
+			row.type === "member" &&
+			normalizeString(row.title) === normalizedName &&
+			(row as any).institution &&
+			normalizeString((row as any).institution) ===
+				normalizeString(externalRow.institution)
+	);
+
+	if (exactMatch) return exactMatch;
+
+	// If no exact match, try just by name
+	const nameMatch = existingRows.find(
+		(row) =>
+			row.type === "member" && normalizeString(row.title) === normalizedName
+	);
+
+	return nameMatch;
+}
+
 export function mapExternalRowsToOrganogramRows(
 	externalRows: ExternalCSVRow[],
+	existingRows: Row[],
 	lastId: number,
 	parentId?: string
-): Row[] {
-	return externalRows.map((externalRow, index) => {
+): { newRows: Row[]; updatedRows: Row[] } {
+	const newRows: Row[] = [];
+	const updatedRows: Row[] = [];
+	let idCounter = lastId;
+
+	externalRows.forEach((externalRow) => {
+		// Check if this member already exists
+		const existingMember = findMatchingMember(externalRow, existingRows);
+
 		// Map the role from external format to our Role enum if possible
 		let mappedRole: Role | string = externalRow.project_role;
 
@@ -84,24 +124,46 @@ export function mapExternalRowsToOrganogramRows(
 			mappedRole = roleMatch;
 		}
 
-		// Create a new row with mapped fields
-		return {
-			id: (lastId + index + 1).toString(),
-			parentId: parentId || undefined,
-			title: externalRow.full_name,
-			type: Type.Member,
-			role: mappedRole as Role,
-			institution: externalRow.institution,
-			country: externalRow.country_residence,
-			expertise: externalRow.expertise,
-			// Additional fields could be added to bio as structured text
-			bio: `Email: ${externalRow.email}
-ORCID: ${externalRow.orcid}
-Qualification: ${externalRow.highest_qualification}
-Start Date: ${externalRow.start_date}
-Initial Position: ${externalRow.initial_position}
-Current Position: ${externalRow.current_position}
-WGS: ${externalRow.wgs}`,
-		} as Row;
+		// Create the bio text
+		const bioText = `Email: ${externalRow.email}
+  ORCID: ${externalRow.orcid}
+  Qualification: ${externalRow.highest_qualification}
+  Start Date: ${externalRow.start_date}
+  Initial Position: ${externalRow.initial_position}
+  Current Position: ${externalRow.current_position}
+  WGS: ${externalRow.wgs}`;
+
+		if (existingMember) {
+			// Update the existing member
+			const updatedMember = {
+				...existingMember,
+				title: externalRow.full_name,
+				institution: externalRow.institution,
+				country: externalRow.country_residence,
+				expertise: externalRow.expertise || (existingMember as any).expertise,
+				role: mappedRole as Role,
+				bio: bioText,
+			};
+
+			updatedRows.push(updatedMember as Row);
+		} else {
+			// Create a new member
+			idCounter++;
+			const newMember: Row = {
+				id: idCounter.toString(),
+				parentId: parentId || undefined,
+				title: externalRow.full_name,
+				type: Type.Member,
+				role: mappedRole as Role,
+				institution: externalRow.institution,
+				country: externalRow.country_residence,
+				expertise: externalRow.expertise,
+				bio: bioText,
+			} as Row;
+
+			newRows.push(newMember);
+		}
 	});
+
+	return { newRows, updatedRows };
 }
