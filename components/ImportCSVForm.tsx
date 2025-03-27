@@ -29,9 +29,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { ExternalCSVRow, ImportCSVFormProps } from "@/interfaces";
+import { ExternalCSVRow, ImportCSVFormProps, Row } from "@/interfaces";
 import {
 	fetchExternalCSV,
+	findAssociatedInfoRow,
 	findMatchingMember,
 	mapExternalRowsToOrganogramRows,
 	parseExternalCSV,
@@ -52,6 +53,8 @@ export default function ImportCSVForm({
 	const [importStats, setImportStats] = useState<{
 		newCount: number;
 		updateCount: number;
+		newInfoCount: number;
+		updateInfoCount: number;
 	} | null>(null);
 
 	const importFileInputRef = useRef<HTMLInputElement>(null);
@@ -112,16 +115,35 @@ export default function ImportCSVForm({
 			if (rows) {
 				let updateCount = 0;
 				let newCount = 0;
+				let newInfoCount = 0;
+				let updateInfoCount = 0;
 
 				externalRows.forEach((externalRow) => {
-					if (findMatchingMember(externalRow, rows)) {
+					const existingMember = findMatchingMember(externalRow, rows);
+
+					if (existingMember) {
 						updateCount++;
+						// Check if there's an associated info row
+						const infoRow = findAssociatedInfoRow(existingMember.id, rows);
+						if (infoRow) {
+							updateInfoCount++;
+						} else if (externalRow.expertise) {
+							newInfoCount++;
+						}
 					} else {
 						newCount++;
+						if (externalRow.expertise) {
+							newInfoCount++;
+						}
 					}
 				});
 
-				setImportStats({ newCount, updateCount });
+				setImportStats({
+					newCount,
+					updateCount,
+					newInfoCount,
+					updateInfoCount,
+				});
 			}
 		} catch (error) {
 			setImportError(`Failed to fetch or parse the CSV: ${error}`);
@@ -149,23 +171,34 @@ export default function ImportCSVForm({
 				throw new Error("No import source specified");
 			}
 
-			// Map external rows to our format, checking for existing members
-			const { newRows, updatedRows } = mapExternalRowsToOrganogramRows(
-				externalRows,
-				rows,
-				getLastId(),
-				importParentId === "no-parent" ? undefined : importParentId
-			);
+			// Map external rows to our format, checking for existing members and info rows
+			const { newRows, updatedRows, newInfoRows, updatedInfoRows } =
+				mapExternalRowsToOrganogramRows(
+					externalRows,
+					rows,
+					getLastId(),
+					importParentId === "no-parent" ? undefined : importParentId
+				);
 
 			// Create a new array with updated rows
-			const updatedRowsMap = new Map(updatedRows.map((row) => [row.id, row]));
+			const updatedRowsMap = new Map<string, Row>();
+
+			// Add member updates to the map
+			updatedRows.forEach((row) => {
+				updatedRowsMap.set(row.id, row);
+			});
+
+			// Add info row updates to the map
+			updatedInfoRows.forEach((row) => {
+				updatedRowsMap.set(row.id, row);
+			});
 
 			const updatedRowsArray = rows.map((row) =>
 				updatedRowsMap.has(row.id) ? updatedRowsMap.get(row.id)! : row
-			);
+			) as Row[];
 
-			// Add new rows
-			setRows([...updatedRowsArray, ...newRows]);
+			// Add new rows (both members and info rows)
+			setRows([...updatedRowsArray, ...newRows, ...newInfoRows]);
 
 			setIsImportDialogOpen(false);
 			setImportUrl("");
@@ -333,6 +366,9 @@ export default function ImportCSVForm({
 									<small>
 										Import will add {importStats.newCount} new members and
 										update {importStats.updateCount} existing members.
+										Additionally, {importStats.newInfoCount} new info rows will
+										be created and {importStats.updateInfoCount} existing info
+										rows will be updated.
 									</small>
 								</div>
 							)}

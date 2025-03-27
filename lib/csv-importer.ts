@@ -98,14 +98,31 @@ export function findMatchingMember(
 	return nameMatch;
 }
 
+// Function to find info rows associated with a member
+export function findAssociatedInfoRow(
+	memberId: string,
+	existingRows: Row[]
+): Row | undefined {
+	return existingRows.find(
+		(row) => row.type === "info" && row.parentId === memberId
+	);
+}
+
 export function mapExternalRowsToOrganogramRows(
 	externalRows: ExternalCSVRow[],
 	existingRows: Row[],
 	lastId: number,
 	parentId?: string
-): { newRows: Row[]; updatedRows: Row[] } {
+): {
+	newRows: Row[];
+	updatedRows: Row[];
+	newInfoRows: Row[];
+	updatedInfoRows: Row[];
+} {
 	const newRows: Row[] = [];
 	const updatedRows: Row[] = [];
+	const newInfoRows: Row[] = [];
+	const updatedInfoRows: Row[] = [];
 	let idCounter = lastId;
 
 	externalRows.forEach((externalRow) => {
@@ -124,6 +141,8 @@ export function mapExternalRowsToOrganogramRows(
 			mappedRole = roleMatch;
 		}
 
+		let memberId: string;
+
 		if (existingMember) {
 			// Update the existing member
 			const updatedMember = {
@@ -136,6 +155,7 @@ export function mapExternalRowsToOrganogramRows(
 			};
 
 			updatedRows.push(updatedMember as Row);
+			memberId = existingMember.id;
 		} else {
 			// Create a new member
 			idCounter++;
@@ -151,8 +171,35 @@ export function mapExternalRowsToOrganogramRows(
 			} as Row;
 
 			newRows.push(newMember);
+			memberId = idCounter.toString();
+		}
+
+		// Now handle the info row for this member
+		const associatedInfoRow = findAssociatedInfoRow(memberId, existingRows);
+
+		if (associatedInfoRow) {
+			// Update the existing info row
+			const updatedInfoRow = {
+				...associatedInfoRow,
+				expertise:
+					externalRow.expertise || (associatedInfoRow as any).expertise,
+			};
+			updatedInfoRows.push(updatedInfoRow as Row);
+		} else if (externalRow.expertise) {
+			// Create a new info row if expertise exists
+			idCounter++;
+			const newInfoRow: Row = {
+				id: idCounter.toString(),
+				parentId: memberId,
+				type: Type.Info,
+				link: "", // Required field for info type
+				bio: "", // Required field for info type
+				expertise: externalRow.expertise,
+			} as Row;
+
+			newInfoRows.push(newInfoRow);
 		}
 	});
 
-	return { newRows, updatedRows };
+	return { newRows, updatedRows, newInfoRows, updatedInfoRows };
 }
