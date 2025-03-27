@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Row } from "@/interfaces";
-import OrganogramForm from "../organogram-form";
+import OrganogramForm from "../components/OrganogramForm";
 
 export default function Home() {
 	const [rows, setRows] = useState<Row[] | undefined>();

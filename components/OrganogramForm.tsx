@@ -23,8 +23,8 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AddRowForm } from "./components/AddRowForm";
-import { EditRowForm } from "./components/EditRowForm";
+import { AddRowForm } from "./AddRowForm";
+import { EditRowForm } from "./EditRowForm";
 import {
 	Group,
 	Info,
@@ -32,8 +32,8 @@ import {
 	OrganogramFormProps,
 	Project,
 	Row,
-} from "./interfaces";
-import ImportCSVForm from "./components/ImportCSVForm";
+} from "../interfaces";
+import ImportCSVForm from "./ImportCSVForm";
 
 export default function OrganogramForm({
 	rows,
