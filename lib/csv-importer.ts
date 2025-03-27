@@ -124,15 +124,6 @@ export function mapExternalRowsToOrganogramRows(
 			mappedRole = roleMatch;
 		}
 
-		// Create the bio text
-		const bioText = `Email: ${externalRow.email}
-  ORCID: ${externalRow.orcid}
-  Qualification: ${externalRow.highest_qualification}
-  Start Date: ${externalRow.start_date}
-  Initial Position: ${externalRow.initial_position}
-  Current Position: ${externalRow.current_position}
-  WGS: ${externalRow.wgs}`;
-
 		if (existingMember) {
 			// Update the existing member
 			const updatedMember = {
@@ -142,7 +133,6 @@ export function mapExternalRowsToOrganogramRows(
 				country: externalRow.country_residence,
 				expertise: externalRow.expertise || (existingMember as any).expertise,
 				role: mappedRole as Role,
-				bio: bioText,
 			};
 
 			updatedRows.push(updatedMember as Row);
@@ -158,7 +148,6 @@ export function mapExternalRowsToOrganogramRows(
 				institution: externalRow.institution,
 				country: externalRow.country_residence,
 				expertise: externalRow.expertise,
-				bio: bioText,
 			} as Row;
 
 			newRows.push(newMember);
