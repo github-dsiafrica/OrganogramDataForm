@@ -329,7 +329,10 @@ export default function OrganogramForm({
 			</Dialog>
 
 			{/* Delete Confirmation Dialog */}
-			<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+			<Dialog
+				open={isDeleteDialogOpen}
+				onOpenChange={() => setIsDeleteDialogOpen(false)}
+			>
 				<DialogContent className="max-w-md">
 					<DialogHeader>
 						<DialogTitle>Confirm Deletion</DialogTitle>
