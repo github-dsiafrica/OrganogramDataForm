@@ -163,4 +163,9 @@ export interface OrganogramFormProps {
 	setIsAddDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	isImportDialogOpen: boolean;
 	setIsImportDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	isClearStorageDialogOpen: boolean;
+	storageAvailable: boolean;
+	setIsClearStorageDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setStorageAvailable: React.Dispatch<React.SetStateAction<boolean>>;
+	setLastSaved: React.Dispatch<React.SetStateAction<Date | null>>;
 }

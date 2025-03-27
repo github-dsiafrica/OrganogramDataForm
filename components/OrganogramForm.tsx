@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertCircle, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,12 @@ import {
 	Row,
 } from "../interfaces";
 import ImportCSVForm from "./ImportCSVForm";
+import {
+	clearLocalStorage,
+	isLocalStorageAvailable,
+	loadFromLocalStorage,
+	saveToLocalStorage,
+} from "@/lib/storage";
 
 export default function OrganogramForm({
 	rows,
@@ -43,12 +49,43 @@ export default function OrganogramForm({
 	setIsAddDialogOpen,
 	isImportDialogOpen,
 	setIsImportDialogOpen,
+	setIsClearStorageDialogOpen,
+	isClearStorageDialogOpen,
+	storageAvailable,
+	setStorageAvailable,
+	setLastSaved,
 }: OrganogramFormProps) {
 	const [editingRow, setEditingRow] = useState<Row | null>(null);
 	const [deletingRowId, setDeletingRowId] = useState<string | null>(null);
-
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+	// Check if localStorage is available and load saved data on mount
+	useEffect(() => {
+		const available = isLocalStorageAvailable();
+		setStorageAvailable(available);
+
+		if (available) {
+			const savedData = loadFromLocalStorage();
+			if (savedData && savedData.length > 0) {
+				setRows(savedData);
+			}
+		}
+	}, []);
+
+	// Save data to localStorage whenever rows change
+	useEffect(() => {
+		if (storageAvailable && rows) {
+			saveToLocalStorage(rows);
+			setLastSaved(new Date());
+		}
+	}, [rows, storageAvailable]);
+
+	const handleClearStorage = () => {
+		clearLocalStorage();
+		setRows(undefined);
+		setIsClearStorageDialogOpen(false);
+	};
 
 	// Gets the highest ID from the rows array to ensure new IDs are unique.
 	const getLastId = (): number => {
@@ -125,15 +162,14 @@ export default function OrganogramForm({
 		if (field === "picture") {
 			if (row.type === "group") return (row as Group).picture || "";
 			if (row.type === "project") return (row as Project).picture || "";
-			if (row.type === "member")
-				return (row as unknown as Project).picture || "";
+			if (row.type === "member") return (row as Member).picture || "";
 			if (row.type === "info") return (row as Info).picture || "";
 		}
 
 		if (field === "link") {
 			if (row.type === "group") return (row as Group).link || "";
 			if (row.type === "project") return (row as Project).link || "";
-			if (row.type === "member") return (row as unknown as Project).link || "";
+			if (row.type === "member") return (row as Member).link || "";
 			if (row.type === "info") return (row as Info).link || "";
 		}
 
@@ -148,6 +184,16 @@ export default function OrganogramForm({
 						<Alert variant="destructive" className="mb-6">
 							<AlertCircle className="h-4 w-4" />
 							<AlertDescription>{error}</AlertDescription>
+						</Alert>
+					)}
+
+					{!storageAvailable && (
+						<Alert className="mb-6">
+							<AlertCircle className="h-4 w-4" />
+							<AlertDescription>
+								Local storage is not available in your browser. Your data will
+								not be saved between sessions.
+							</AlertDescription>
 						</Alert>
 					)}
 
@@ -301,6 +347,33 @@ export default function OrganogramForm({
 						</Button>
 						<Button variant="destructive" onClick={handleDeleteRow}>
 							Delete
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			{/* Clear Storage Confirmation Dialog */}
+			<Dialog
+				open={isClearStorageDialogOpen}
+				onOpenChange={setIsClearStorageDialogOpen}
+			>
+				<DialogContent className="max-w-md">
+					<DialogHeader>
+						<DialogTitle>Clear Saved Data</DialogTitle>
+						<DialogDescription>
+							Are you sure you want to clear all saved data? This will remove
+							all data from your browser&apos;s storage and cannot be undone.
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter className="flex space-x-2 pt-4">
+						<Button
+							variant="outline"
+							onClick={() => setIsClearStorageDialogOpen(false)}
+						>
+							Cancel
+						</Button>
+						<Button variant="destructive" onClick={handleClearStorage}>
+							Clear Data
 						</Button>
 					</DialogFooter>
 				</DialogContent>

@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 
-import { Download, FileUp, Plus, Upload } from "lucide-react";
+import { Database, Download, FileUp, Plus, Save, Upload } from "lucide-react";
 import {
 	Card,
 	CardDescription,
@@ -19,6 +19,10 @@ export default function Home() {
 	const [error, setError] = useState<string | null>(null);
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 	const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+	const [isClearStorageDialogOpen, setIsClearStorageDialogOpen] =
+		useState(false);
+	const [storageAvailable, setStorageAvailable] = useState(false);
+	const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -137,6 +141,10 @@ export default function Home() {
 		return csvLines.join("\n");
 	};
 
+	const formatLastSaved = (date: Date): string => {
+		return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+	};
+
 	return (
 		<>
 			<nav className="flex py-4 gap-8 justify-between items-center container mx-auto">
@@ -175,6 +183,7 @@ export default function Home() {
 							accept=".csv"
 							className="hidden"
 						/>
+
 						{rows && (
 							<>
 								<Button
@@ -185,6 +194,7 @@ export default function Home() {
 									<Upload className="h-4 w-4" />
 									Import Additional Data
 								</Button>
+
 								<Button
 									onClick={handleDownloadCSV}
 									variant="outline"
@@ -193,17 +203,36 @@ export default function Home() {
 									<Download className="h-4 w-4" />
 									Download CSV
 								</Button>
+
 								<Button
 									onClick={() => setIsAddDialogOpen(true)}
 									variant="default"
-									className="flex items-center gap-2 ml-auto"
+									className="flex items-center gap-2"
 								>
 									<Plus className="h-4 w-4" />
 									Add Row
 								</Button>
+
+								{storageAvailable && (
+									<Button
+										onClick={() => setIsClearStorageDialogOpen(true)}
+										variant="outline"
+										className="flex items-center gap-2 ml-auto"
+									>
+										<Database className="h-4 w-4" />
+										Clear Saved Data
+									</Button>
+								)}
 							</>
 						)}
 					</div>
+
+					{storageAvailable && lastSaved && (
+						<div className="flex items-center text-sm text-muted-foreground mb-4">
+							<Save className="h-3 w-3 mr-1" />
+							<span>Auto-saved at {formatLastSaved(lastSaved)}</span>
+						</div>
+					)}
 				</div>
 				<OrganogramForm
 					rows={rows}
@@ -213,6 +242,11 @@ export default function Home() {
 					setIsAddDialogOpen={setIsAddDialogOpen}
 					isImportDialogOpen={isImportDialogOpen}
 					setIsImportDialogOpen={setIsImportDialogOpen}
+					isClearStorageDialogOpen={isClearStorageDialogOpen}
+					setIsClearStorageDialogOpen={setIsClearStorageDialogOpen}
+					storageAvailable={storageAvailable}
+					setStorageAvailable={setStorageAvailable}
+					setLastSaved={setLastSaved}
 				/>
 			</main>
 		</>

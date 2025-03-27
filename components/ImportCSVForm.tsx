@@ -275,7 +275,7 @@ export default function ImportCSVForm({
 										onChange={handleImportUrlChange}
 										placeholder="https://example.com/data.csv"
 									/>
-									<Button onClick={fetchPreview} disabled={isImporting} />
+
 									<Button
 										onClick={fetchPreview}
 										disabled={isImporting}
