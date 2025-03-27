@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Download, FileUp, Plus, Upload } from "lucide-react";
 import {
 	Card,
-	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
@@ -151,18 +150,17 @@ export default function Home() {
 					DS-I Africa Organogram Data Generator
 				</h1>
 			</nav>
-			<main className="min-h-screen bg-background w-full overflow-x-hidden">
-				<div className="container mx-auto">
-					<Card className="mb-8">
+			<main className="min-h-screen bg-background w-full overflow-x-auto">
+				<div className="container mx-auto relative">
+					<Card>
 						<CardHeader>
 							<CardTitle>DS-I Africa Organogram Data Manager</CardTitle>
 							<CardDescription>
 								Upload, edit, and manage the data for the DS-I Africa organogram
 							</CardDescription>
 						</CardHeader>
-						<CardContent></CardContent>
 					</Card>
-					<div className="flex items-center gap-4 mb-6 sticky top-0">
+					<div className="my-4 flex items-center gap-4 sticky left-0 right-0 top-0 bg-background z-10">
 						<Button
 							onClick={() => fileInputRef.current?.click()}
 							className="flex items-center gap-2"
