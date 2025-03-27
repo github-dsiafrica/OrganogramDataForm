@@ -154,3 +154,13 @@ export interface ImportCSVFormProps {
 	isImportDialogOpen: boolean;
 	setIsImportDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface OrganogramFormProps {
+	rows: Row[] | undefined;
+	setRows: React.Dispatch<React.SetStateAction<Row[] | undefined>>;
+	error: string | null;
+	isAddDialogOpen: boolean;
+	setIsAddDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	isImportDialogOpen: boolean;
+	setIsImportDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
