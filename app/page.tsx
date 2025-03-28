@@ -76,9 +76,18 @@ export default function Home() {
 				for (let i = 0; i < line.length; i++) {
 					const char = line[i];
 
-					if (char === '"' && (i === 0 || line[i - 1] !== "\\")) {
-						insideQuotes = !insideQuotes;
+					if (char === '"') {
+						// Check if this is an escaped quote (double quote) inside a quoted field
+						if (insideQuotes && i + 1 < line.length && line[i + 1] === '"') {
+							// Add a single quote to the value and skip the next quote
+							currentValue += '"';
+							i++;
+						} else {
+							// Toggle the insideQuotes flag
+							insideQuotes = !insideQuotes;
+						}
 					} else if (char === "," && !insideQuotes) {
+						// End of field
 						values.push(currentValue.trim());
 						currentValue = "";
 					} else {
@@ -89,23 +98,31 @@ export default function Home() {
 				// Add the last value
 				values.push(currentValue.trim());
 
-				// Remove quotes from values
-				const cleanValues = values.map((val) => {
-					if (val.startsWith('"') && val.endsWith('"')) {
-						return val.substring(1, val.length - 1);
-					}
-					return val;
-				});
-
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const row: any = {};
 
 				headers.forEach((header, index) => {
-					row[header] = index < cleanValues.length ? cleanValues[index] : "";
+					row[header] = index < values.length ? values[index] : "";
 				});
 
 				return row as Row;
 			});
+	};
+
+	// Helper function to properly escape CSV values
+	const escapeCSVValue = (value: string): string => {
+		// If the value contains commas, quotes, or newlines, it needs to be quoted
+		if (
+			value.includes(",") ||
+			value.includes('"') ||
+			value.includes("\n") ||
+			value.includes("\r")
+		) {
+			// Double up any quotes in the value
+			const escapedValue = value.replace(/"/g, '""');
+			return `"${escapedValue}"`;
+		}
+		return value;
 	};
 
 	// CSV Generator
@@ -132,8 +149,7 @@ export default function Home() {
 			const values = headers.map((header) => {
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const value = (row as any)[header] || "";
-				// Escape commas in values
-				return value.includes(",") ? `"${value}"` : value;
+				return escapeCSVValue(value);
 			});
 			csvLines.push(values.join(","));
 		});

@@ -32,9 +32,18 @@ export function parseExternalCSV(csvText: string): ExternalCSVRow[] {
 			for (let i = 0; i < line.length; i++) {
 				const char = line[i];
 
-				if (char === '"' && (i === 0 || line[i - 1] !== "\\")) {
-					insideQuotes = !insideQuotes;
+				if (char === '"') {
+					// Check if this is an escaped quote (double quote) inside a quoted field
+					if (insideQuotes && i + 1 < line.length && line[i + 1] === '"') {
+						// Add a single quote to the value and skip the next quote
+						currentValue += '"';
+						i++;
+					} else {
+						// Toggle the insideQuotes flag
+						insideQuotes = !insideQuotes;
+					}
 				} else if (char === "," && !insideQuotes) {
+					// End of field
 					values.push(currentValue.trim());
 					currentValue = "";
 				} else {
@@ -45,20 +54,12 @@ export function parseExternalCSV(csvText: string): ExternalCSVRow[] {
 			// Add the last value
 			values.push(currentValue.trim());
 
-			// Remove quotes from values
-			const cleanValues = values.map((val) => {
-				if (val.startsWith('"') && val.endsWith('"')) {
-					return val.substring(1, val.length - 1);
-				}
-				return val;
-			});
-
 			const row: any = {};
 
 			headers.forEach((header, index) => {
 				if (header) {
 					// Skip empty headers
-					row[header] = index < cleanValues.length ? cleanValues[index] : "";
+					row[header] = index < values.length ? values[index] : "";
 				}
 			});
 
