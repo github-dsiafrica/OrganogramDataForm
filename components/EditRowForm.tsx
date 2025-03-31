@@ -225,7 +225,6 @@ export function EditRowForm({
 									id="link"
 									name="link"
 									defaultValue={(row as Info).link || ""}
-									required
 								/>
 							</div>
 							<div className="space-y-2">
@@ -244,7 +243,6 @@ export function EditRowForm({
 								id="bio"
 								name="bio"
 								defaultValue={(row as Info).bio || ""}
-								required
 							/>
 						</div>
 					</>
