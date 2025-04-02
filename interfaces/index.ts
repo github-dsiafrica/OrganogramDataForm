@@ -40,6 +40,7 @@ export enum Role {
 	PhDStudent = "PhD Student",
 	PhDTrainee = "PhD Trainee",
 	PostDoc = "Post-Doc",
+	PostgraduateStudent = "Postgraduate Student",
 	PreDoc = "Pre-Doc",
 	ProjectTeamMember = "Project Team Member",
 	REDCapAdministrator = "REDCap Administrator",
