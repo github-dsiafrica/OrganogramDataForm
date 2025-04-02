@@ -53,7 +53,7 @@ export default function Home() {
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");
 		link.setAttribute("href", url);
-		link.setAttribute("download", "organogram_data.csv");
+		link.setAttribute("download", "data.csv");
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
