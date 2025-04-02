@@ -109,6 +109,37 @@ export function findAssociatedInfoRow(
 	);
 }
 
+// Add this helper function to map role strings to Role enum values
+function mapRoleString(roleString: string): Role {
+	// First try exact match
+	if (Object.values(Role).includes(roleString as Role)) {
+		return roleString as Role;
+	}
+
+	// Try case-insensitive match
+	const normalizedRoleString = roleString.toLowerCase().trim();
+
+	for (const role of Object.values(Role)) {
+		if (role.toLowerCase() === normalizedRoleString) {
+			return role;
+		}
+	}
+
+	// Try to find a close match
+	for (const role of Object.values(Role)) {
+		// Remove spaces and special characters for comparison
+		const simplifiedRole = role.toLowerCase().replace(/[^a-z0-9]/g, "");
+		const simplifiedInput = normalizedRoleString.replace(/[^a-z0-9]/g, "");
+
+		if (simplifiedRole === simplifiedInput) {
+			return role;
+		}
+	}
+
+	// If no match found, return a default role
+	return Role.Researcher;
+}
+
 export function mapExternalRowsToOrganogramRows(
 	externalRows: ExternalCSVRow[],
 	existingRows: Row[],
@@ -131,16 +162,7 @@ export function mapExternalRowsToOrganogramRows(
 		const existingMember = findMatchingMember(externalRow, existingRows);
 
 		// Map the role from external format to our Role enum if possible
-		let mappedRole: Role | string = externalRow.project_role;
-
-		// Try to find a matching role in our enum
-		const roleMatch = Object.values(Role).find(
-			(role) => role.toLowerCase() === externalRow.project_role.toLowerCase()
-		);
-
-		if (roleMatch) {
-			mappedRole = roleMatch;
-		}
+		const mappedRole: Role = mapRoleString(externalRow.project_role);
 
 		let memberId: string;
 
@@ -152,7 +174,7 @@ export function mapExternalRowsToOrganogramRows(
 				institution: externalRow.institution,
 				country: externalRow.country_residence,
 				expertise: externalRow.expertise || (existingMember as any).expertise,
-				role: mappedRole as Role,
+				role: mappedRole,
 			};
 
 			updatedRows.push(updatedMember as Row);
@@ -165,7 +187,7 @@ export function mapExternalRowsToOrganogramRows(
 				parentId: parentId || undefined,
 				title: externalRow.full_name,
 				type: Type.Member,
-				role: mappedRole as Role,
+				role: mappedRole,
 				institution: externalRow.institution,
 				country: externalRow.country_residence,
 				expertise: externalRow.expertise,

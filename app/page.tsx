@@ -11,7 +11,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Row } from "@/interfaces";
+import { Role, Row } from "@/interfaces";
 import OrganogramForm from "../components/OrganogramForm";
 
 export default function Home() {
@@ -59,10 +59,55 @@ export default function Home() {
 		document.body.removeChild(link);
 	};
 
+	// Helper function to map role strings to Role enum values
+	const mapRoleValue = (roleString: string): Role | undefined => {
+		if (!roleString) {
+			return Role.Researcher;
+		}
+
+		// First try exact match
+		if (Object.values(Role).includes(roleString as Role)) {
+			return roleString as Role;
+		}
+
+		// Try case-insensitive match
+		const normalizedRoleString = roleString.toLowerCase().trim();
+
+		for (const role of Object.values(Role)) {
+			if (role.toLowerCase() === normalizedRoleString) {
+				return role;
+			}
+		}
+
+		// Try to find a close match
+		for (const role of Object.values(Role)) {
+			// Remove spaces and special characters for comparison
+			const simplifiedRole = role.toLowerCase().replace(/[^a-z0-9]/g, "");
+			const simplifiedInput = normalizedRoleString.replace(/[^a-z0-9]/g, "");
+
+			if (simplifiedRole === simplifiedInput) {
+				return role;
+			}
+		}
+
+		// Try to find a partial match
+		for (const role of Object.values(Role)) {
+			if (
+				role.toLowerCase().includes(normalizedRoleString) ||
+				normalizedRoleString.includes(role.toLowerCase())
+			) {
+				return role;
+			}
+		}
+
+		// If no match found, return the first role as a fallback
+		return Role.Researcher;
+	};
+
 	// CSV Parser
 	const parseCSV = (csvText: string): Row[] => {
 		const lines = csvText.split("\n");
-		const headers = lines[0].split(",");
+		const headers = lines[0].split(",").map((h) => h.trim());
 
 		return lines
 			.slice(1)
@@ -102,8 +147,25 @@ export default function Home() {
 				const row: any = {};
 
 				headers.forEach((header, index) => {
-					row[header] = index < values.length ? values[index] : "";
+					const headerKey = header.trim();
+					if (headerKey) {
+						row[headerKey] = index < values.length ? values[index].trim() : "";
+					}
 				});
+
+				// Special handling for role field if this is a member type
+				if (row.type === "member") {
+					// Make sure role exists, even if empty
+					if (!row.role) {
+						row.role = "";
+					}
+
+					// Try to map the role string to a valid Role enum value
+					const roleValue = mapRoleValue(row.role);
+					if (roleValue) {
+						row.role = roleValue;
+					}
+				}
 
 				return row as Row;
 			});

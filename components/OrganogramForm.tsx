@@ -124,6 +124,20 @@ export default function OrganogramForm({
 
 	// Helper function to safely get field values
 	const getFieldValue = (row: Row, field: string): string => {
+		if (field === "role") {
+			if (row.type === "member") {
+				const roleValue = (row as Member).role;
+				if (roleValue) {
+					return roleValue;
+				} else {
+					return "-";
+				}
+			}
+			if (row.type === "group") return (row as Group).role || "-";
+			if (row.type === "project") return (row as Project).role || "-";
+			if (row.type === "info") return (row as Info).role || "-";
+		}
+
 		if (field === "acronym") {
 			if (row.type === "group") return (row as Group).acronym || "-";
 			if (row.type === "project") return (row as Project).acronym || "-";
@@ -150,13 +164,6 @@ export default function OrganogramForm({
 			if (row.type === "project") return (row as Project).pi || "-";
 			if (row.type === "member") return (row as Member).pi || "-";
 			if (row.type === "info") return (row as Info).pi || "-";
-		}
-
-		if (field === "role") {
-			if (row.type === "member") return (row as Member).role || "-";
-			if (row.type === "group") return (row as Group).role || "-";
-			if (row.type === "project") return (row as Project).role || "-";
-			if (row.type === "info") return (row as Info).role || "-";
 		}
 
 		if (field === "picture") {

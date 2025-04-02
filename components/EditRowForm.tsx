@@ -197,7 +197,11 @@ export function EditRowForm({
 								<Label htmlFor="role">Role</Label>
 								<Select
 									name="role"
-									defaultValue={(row as Member).role}
+									defaultValue={
+										Object.values(Role).includes((row as Member).role)
+											? (row as Member).role
+											: Role.Researcher
+									}
 									required
 								>
 									<SelectTrigger>
@@ -211,6 +215,12 @@ export function EditRowForm({
 										))}
 									</SelectContent>
 								</Select>
+								{!Object.values(Role).includes((row as Member).role) && (
+									<p className="text-xs text-amber-500 mt-1">
+										Original role &quot;{(row as Member).role}&quot; was mapped
+										to a standard role.
+									</p>
+								)}
 							</div>
 						</div>
 					</>
